@@ -4,7 +4,8 @@
   "description": "store for vms data, and event stream for client apps to observe",
   "main": "index.js",
   "scripts": {
-    "test": "test"
+    "test": "test",
+    "dev": "npx nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -13,6 +14,9 @@
   "author": "oliver.ross@hotmail.com",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.2"
+    "express": "^4.16.2",
+    "mongoose": "^4.12.4",
+    "nodemon": "^1.12.1",
+    "ws": "^3.2.0"
   }
 }

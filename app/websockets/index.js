@@ -11,13 +11,20 @@ module.exports = (server, path) => {
 
   wss.on('connection', (ws, req) => {
     ws.on('message', (message) => {
-      db.event.create({ data: message }).then(() => {
-        wss.clients.forEach((client) => {
-          if (client !== ws && client.readyState === WebSocket.OPEN) {
-            client.send(message);
-          }
-        });
-      }).catch(console.dir);
+      db.event.count().then((count) => {
+        db.event.create({
+          type: 'testtype',
+          data: message,
+          timestamp: Date.now(),
+          version: count
+        }).then(() => {
+          wss.clients.forEach((client) => {
+            if (client !== ws && client.readyState === WebSocket.OPEN) {
+              client.send(message);
+            }
+          });
+        }).catch(console.dir);
+      });
     });
   });
 

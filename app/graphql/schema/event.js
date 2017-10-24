@@ -4,7 +4,6 @@ const {
   GraphQLSchema,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLInputObjectType,
   GraphQLList,
   GraphQLString,
   GraphQLInt
@@ -13,7 +12,10 @@ const {
 const Event = new GraphQLObjectType({
   name: 'Event',
   fields: {
-    data: { type: GraphQLJSON }
+    type: { type: GraphQLString },
+    data: { type: GraphQLJSON },
+    timestamp: { type: GraphQLString },
+    version: { type: GraphQLInt }         // TODO how to increment version from multiple clients sending events....
   }
 })
 
@@ -24,13 +26,13 @@ module.exports = new GraphQLSchema({
       read: {
         type: new GraphQLList(Event),
         args: {
-          from: { name: 'from', type: GraphQLString }
+          version: { name: 'version', type: GraphQLInt }
         },
         resolve: (_, { from }) => {
           return new Promise((resolve, reject) => {
-            Model.find({}, (err, docs) => {    // TODO find with id greater than from....
+            Model.find({}, (err, docs) => {    // TODO find with version greater than from....
               err ? reject(err) : resolve(docs.map((doc) => {
-                doc.data = JSON.parse(doc.data.toString())
+                doc.data = JSON.parse(doc.data.toString());
                 return doc;
               }));
             });

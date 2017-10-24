@@ -17,7 +17,7 @@ const Event = new GraphQLObjectType({
     timestamp: { type: GraphQLString },
     version: { type: GraphQLInt }         // TODO how to increment version from multiple clients sending events....
   }
-})
+});
 
 module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
@@ -28,9 +28,9 @@ module.exports = new GraphQLSchema({
         args: {
           version: { name: 'version', type: GraphQLInt }
         },
-        resolve: (_, { from }) => {
+        resolve: (_, { version }) => {
           return new Promise((resolve, reject) => {
-            Model.find({}, (err, docs) => {    // TODO find with version greater than from....
+            Model.find({ version: { $gt: version }}, (err, docs) => {    // TODO find with version greater than from....
               err ? reject(err) : resolve(docs.map((doc) => {
                 doc.data = JSON.parse(doc.data.toString());
                 return doc;

@@ -3,17 +3,9 @@ const http = require('http'),
   app = require('express')();
 
 const server = http.createServer(app);
-const sockets = require('./websockets')(server, '/events');
 
-const db = require('./mongoose');
-app.use('/allEvents', (req, res) => {
-  db.event.read({}).then((docs) => {
-    res.json(docs.map((doc) => {
-      doc.data = JSON.parse(doc.data.toString());
-      return doc;
-    }));
-  });
-});
+require('./websockets')(server, '/events');
+require('./graphql')(app, '/query');
 
 module.exports = () => {
   server.listen(3000, () => {

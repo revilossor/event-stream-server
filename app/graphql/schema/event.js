@@ -2,7 +2,6 @@ const Model = require('../../mongoose/model/event');
 const GraphQLJSON = require('graphql-type-json');
 const {
   GraphQLSchema,
-  GraphQLNonNull,
   GraphQLObjectType,
   GraphQLList,
   GraphQLString,
@@ -12,10 +11,9 @@ const {
 const Event = new GraphQLObjectType({
   name: 'Event',
   fields: {
-    type: { type: GraphQLString },
+    aggregateId: { type: GraphQLString },
     data: { type: GraphQLJSON },
-    timestamp: { type: GraphQLString },
-    version: { type: GraphQLInt }         // TODO how to increment version from multiple clients sending events....
+    version: { type: GraphQLInt }
   }
 });
 
@@ -26,11 +24,11 @@ module.exports = new GraphQLSchema({
       read: {
         type: new GraphQLList(Event),
         args: {
-          version: { name: 'version', type: GraphQLInt }
+          version: { name: 'version', type: GraphQLInt }        // TODO input type of aggregateId, version
         },
         resolve: (_, { version }) => {
           return new Promise((resolve, reject) => {
-            Model.find({ version: { $gt: version }}, (err, docs) => {    // TODO find with version greater than from....
+            Model.find({ version: { $gt: version }}, (err, docs) => {
               err ? reject(err) : resolve(docs.map((doc) => {
                 doc.data = JSON.parse(doc.data.toString());
                 return doc;

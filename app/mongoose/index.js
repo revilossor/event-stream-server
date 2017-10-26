@@ -16,9 +16,9 @@ module.exports = {
         });
       });
     },
-    count: () => {    // TODO could cache this? increment on save?
+    count: (aggregateId) => {
       return new Promise((resolve, reject) => {
-        Event.count({}, (err, count) => {
+        Event.count({ aggregateId }, (err, count) => {
           err ? reject(err) : resolve(count);
         });
       });

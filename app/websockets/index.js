@@ -11,13 +11,9 @@ module.exports = (server, path) => {
 
   wss.on('connection', (ws, req) => {
     ws.on('message', (message) => {
-      db.event.count().then((count) => {
-        db.event.create({
-          type: 'testtype',
-          data: message,
-          timestamp: Date.now(),
-          version: count
-        }).then(() => {
+      console.log('message received - ' + message);
+      db.event.count(message.aggregateId).then((count) => {
+        db.event.create(JSON.parse(message)).then((doc) => {    // TODO what to do with version????
           wss.clients.forEach((client) => {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
               client.send(message);

@@ -1,14 +1,30 @@
 const mongoose = require('mongoose');
 
-//const uri = 'mongodb://user:password@ds113925.mlab.com:13925/vms-spike';
-const uri = 'mongodb://store:27017';
+const uri = 'mongodb://store:27017/eventstream';
 
 mongoose.Promise = global.Promise;
-mongoose.connect(uri);
-
 const db = mongoose.connection;
 
+db.on('connecting', () => {
+  console.log(`connecting to ${uri}`);
+});
+db.on('error', (err) => {
+  console.error('error connecting: ' + error);
+  mongoose.disconnect();
+});
+db.on('connected', () => {
+  console.log('connected!');
+});
 db.once('open', () => {
-  console.log('database connection is open!');
+  console.log('connection opened!');
   require('./main')();
 });
+db.on('reconnected', () => {
+  console.log('reconnected!');
+});
+db.on('disconnected', () => {
+  console.log('disconnected!');
+  mongoose.connect(uri, { server: { auto_reconnect: true } });
+});
+
+mongoose.connect(uri, { server: { auto_reconnect: true } });

@@ -2,10 +2,10 @@
   "name": "vms-spike-store",
   "version": "0.0.0",
   "description": "store for vms data, and event stream for client apps to observe",
-  "main": "index.js",
+  "main": "app/index.js",
   "scripts": {
     "test": "test",
-    "dev": "npx nodemon index.js"
+    "dev": "npx nodemon app/index.js"
   },
   "repository": {
     "type": "git",

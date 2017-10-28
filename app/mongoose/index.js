@@ -18,7 +18,7 @@ module.exports = {
     },
     count: (aggregateId) => {
       return new Promise((resolve, reject) => {
-        Event.count({ aggregateId }, (err, count) => {
+        Event.count({ aggregateId: aggregateId }, (err, count) => {
           err ? reject(err) : resolve(count);
         });
       });

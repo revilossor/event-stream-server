@@ -9,5 +9,5 @@ const db = mongoose.connection;
 
 db.once('open', () => {
   console.log('database connection is open!');
-  require('./app/main')();
+  require('./main')();
 });

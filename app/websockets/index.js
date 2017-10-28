@@ -11,9 +11,11 @@ module.exports = (server, path) => {
 
   wss.on('connection', (ws, req) => {
     ws.on('message', (message) => {
-      console.log('message received - ' + message);
-      db.event.count(message.aggregateId).then((count) => {
-        db.event.create(JSON.parse(message)).then((doc) => {    // TODO what to do with version????
+      const parsedMessage = JSON.parse(message);
+      db.event.count(parsedMessage.aggregateId).then((count) => {
+        console.log('received message - current version is ' + count + ' message version is ' + parsedMessage.version);
+        // TODO if version < count, client is out of date
+        db.event.create(parsedMessage).then((doc) => {
           wss.clients.forEach((client) => {
             if (client !== ws && client.readyState === WebSocket.OPEN) {
               client.send(message);
@@ -21,6 +23,7 @@ module.exports = (server, path) => {
           });
         }).catch(console.dir);
       });
+
     });
   });
 

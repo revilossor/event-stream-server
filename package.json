@@ -1,7 +1,7 @@
 {
-  "name": "vms-spike-store",
+  "name": "rahv-spike-stream",
   "version": "0.0.0",
-  "description": "store for vms data, and event stream for client apps to observe",
+  "description": "event stream for request a home visit",
   "main": "app/index.js",
   "scripts": {
     "test": "test",

@@ -31,18 +31,20 @@ module.exports = new GraphQLSchema({
   query: new GraphQLObjectType({
     name: 'Query',
     fields: {
-      read: {
+      getEvents: {
         type: new GraphQLList(Event),
         args: {
           selector: { name: 'selector', type: new GraphQLNonNull(EventSelector) }
         },
         resolve: (_, { selector }) => {
-          const version = selector.version || 0;
+          const find = {
+            aggregateId: selector.aggregateId
+          };
+          if(selector.version) {
+            find.version = { $lte: selector.version };
+          }
           return new Promise((resolve, reject) => {
-            Model.find({
-              aggregateId: selector.aggregateId,
-              version: { $gt: version }
-            }, (err, docs) => {
+            Model.find(find, (err, docs) => {
               err ? reject(err) : resolve(docs);
             });
           });

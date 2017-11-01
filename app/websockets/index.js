@@ -13,7 +13,6 @@ module.exports = (server, path) => {
     ws.on('message', (message) => {
       const parsedMessage = JSON.parse(message);
       db.event.count(parsedMessage.aggregateId).then((count) => {
-        console.log('received message to ' + parsedMessage.aggregateId + ' - current version is ' + count + ' message version is ' + parsedMessage.version);
         // TODO if version < count, client is out of date
         db.event.create(parsedMessage).then((doc) => {
           wss.clients.forEach((client) => {

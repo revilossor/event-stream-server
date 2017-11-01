@@ -9,7 +9,7 @@ db.on('connecting', () => {
   console.log(`connecting to ${uri}`);
 });
 db.on('error', (err) => {
-  console.error('error connecting: ' + error);
+  console.error('error connecting: ' + err);
   mongoose.disconnect();
 });
 db.on('connected', () => {

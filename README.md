@@ -15,7 +15,8 @@ query events (on /query) like this
     data
     version
   }
-}```
+}
+```
 
 Connect to the socket server ( on /events ) like this ( using [ws](https://www.npmjs.com/package/ws) )
 
